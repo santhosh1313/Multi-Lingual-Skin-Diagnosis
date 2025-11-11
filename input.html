@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Image | Skin Diagnosis</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e3f2fd, #ffffff);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1565c0, #1e88e5);
+      color: white;
+      height: 150px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    header img {
+      position: absolute;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 100px;
+      width: auto;
+      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .header-buttons {
+      position: absolute;
+      bottom: 20px;
+      right: 30px;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .language-selector {
+      background-color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1565c0;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .language-selector:hover {
+      background: #0d47a1;
+      color: white;
+    }
+
+    .header-buttons a {
+      text-decoration: none;
+      color: #1565c0;
+      background-color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      font-size: 1rem;
+      transition: 0.3s ease;
+      font-weight: 700;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .header-buttons a:hover {
+      background: #0d47a1;
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-instructions {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border-left: 4px solid #1565c0;
+    }
+
+    .upload-instructions h3 {
+      color: #1565c0;
+      margin-bottom: 1rem;
+    }
+
+    .upload-section {
+      background: #e3f2fd;
+      padding: 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .upload-section h2 {
+      color: #1565c0;
+      margin-bottom: 1rem;
+    }
+
+    .upload-box {
+      border: 2px dashed #1565c0;
+      border-radius: 8px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      background: #f8fbff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .upload-box:hover {
+      background: #e3f2fd;
+      border-color: #0d47a1;
+    }
+
+    .upload-box p {
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    .browse-btn {
+      background: #1565c0;
+      color: white;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+
+    .browse-btn:hover {
+      background: #0d47a1;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .preview-section {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    #imagePreview {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 8px;
+      display: none;
+      margin: 1rem auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .analyze-btn {
+      background: #1565c0;
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    .analyze-btn:hover {
+      background: #0d47a1;
+      transform: translateY(-2px);
+    }
+
+    .cancel-btn {
+      background: #666;
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    .cancel-btn:hover {
+      background: #555;
+      transform: translateY(-2px);
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: #666;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .back-btn:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Skin Diagnosis Logo">
+    <h1>Skin Diagnosis</h1>
+    <div class="header-buttons">
+      <select id="language-selector" class="language-selector" style="background-color: white; padding: 0.6rem 1rem; border-radius: 30px; font-size: 1rem; font-weight: 600; color: #1565c0; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer; transition: 0.3s ease;">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="te">తెలుగు</option>
+        <option value="ta">தமிழ்</option>
+        <option value="ml">മലയാളം</option>
+        <option value="kn">ಕನ್ನಡ</option>
+      </select>
+      <div class="profile-btn" id="profile-btn" style="width: 45px; height: 45px; border-radius: 50%; background: white; border: 2px solid #1565c0; display: flex; justify-content: center; align-items: center; font-weight: bold; color: #1565c0; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" onclick="toggleProfileMenu()">U</div>
+      <div class="profile-menu" id="profile-menu" style="display: none; position: absolute; top: 70px; right: 30px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); padding: 1rem; width: 220px; text-align: left; z-index: 1000;">
+        <p style="margin: 0 0 0.8rem 0; font-size: 0.95rem; color: #333; line-height: 1.5;"><strong data-translate="user">User</strong>: <span id="profile-username" style="font-weight: normal; color: #1565c0;">User</span></p>
+        <button class="logout-btn" onclick="logout()" data-translate="logout" style="background: #1565c0; color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 6px; font-size: 0.95rem; cursor: pointer; width: 100%; margin-top: 0.5rem;">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="upload-instructions">
+      <h3>📋 <span data-translate="upload_skin_image">Upload Skin Image</span>:</h3>
+      <p data-translate="upload_instructions">Click the "Upload" button and select a clear photo of the skin area you want to check. Ensure the image is well-lit and in focus so the app can analyze it accurately. Supported formats are usually JPG or PNG.</p>
+    </div>
+
+    <div class="upload-section">
+      <h2 data-translate="upload_skin_image">Upload Your Skin Image</h2>
+      <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+        <div>📁</div>
+        <p data-translate="drag_drop">Drag & drop your image here or click to browse</p>
+        <p><small data-translate="supported_formats">Supported formats: JPG, PNG</small></p>
+        <button class="browse-btn" data-translate="upload_image">Upload Image</button>
+      </div>
+      
+      <input type="file" id="fileInput" accept="image/jpeg, image/png" onchange="previewImage()">
+      
+      <div class="preview-section">
+        <img id="imagePreview" alt="Image Preview">
+        <div class="button-group">
+          <button class="analyze-btn" id="analyzeBtn" onclick="analyzeImage()" data-translate="analyze_image">Analyze Image</button>
+          <button class="cancel-btn" onclick="cancelUpload()" data-translate="cancel_upload">Cancel Upload</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <a href="skin.html" class="back-btn" id="backToHomeBtn" data-translate="back_to_home">← Back to Home</a>
+    </div>
+  </div>
+
+  <script src="translation.js"></script>
+  <script>
+    function previewImage() {
+      const fileInput = document.getElementById('fileInput');
+      const preview = document.getElementById('imagePreview');
+      const analyzeBtn = document.querySelector('.analyze-btn');
+      const cancelBtn = document.querySelector('.cancel-btn');
+      
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          analyzeBtn.style.display = 'block';
+          cancelBtn.style.display = 'block';
+        }
+        
+        reader.readAsDataURL(fileInput.files[0]);
+      }
+    }
+
+    function cancelUpload() {
+      const fileInput = document.getElementById('fileInput');
+      const preview = document.getElementById('imagePreview');
+      const analyzeBtn = document.querySelector('.analyze-btn');
+      const cancelBtn = document.querySelector('.cancel-btn');
+      
+      // Reset file input
+      fileInput.value = '';
+      
+      // Hide preview and buttons
+      preview.style.display = 'none';
+      analyzeBtn.style.display = 'none';
+      cancelBtn.style.display = 'none';
+    }
+
+    // Check if user is logged in
+    window.addEventListener('DOMContentLoaded', function() {
+      checkLoginStatus();
+      
+      // Fix back button to preserve session
+      const backBtn = document.getElementById('backToHomeBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          // Just navigate normally - sessionStorage will persist
+          window.location.href = 'skin.html';
+        });
+      }
+    });
+
+    async function checkLoginStatus() {
+      const loggedIn = sessionStorage.getItem('loggedIn');
+      if (!loggedIn) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      // First, try to use username from sessionStorage if available
+      const storedUsername = sessionStorage.getItem('username');
+      if (storedUsername && storedUsername !== 'User') {
+        console.log('Using stored username:', storedUsername);
+        updateProfileDisplay(storedUsername);
+      }
+      
+      // Fetch user info from API to get username
+      try {
+        // Use current origin to avoid cookie issues
+        const apiUrl = window.location.origin + '/api/user';
+        console.log('Fetching user info from:', apiUrl);
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          credentials: 'include',
+          mode: 'cors'
+        });
+        
+        console.log('User API response status:', response.status);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('User API response data:', data);
+          if (data.success && data.username) {
+            sessionStorage.setItem('username', data.username);
+            updateProfileDisplay(data.username);
+          } else {
+            // Fallback to sessionStorage
+            const username = sessionStorage.getItem('username') || 'User';
+            console.log('Using fallback username:', username);
+            updateProfileDisplay(username);
+          }
+        } else {
+          // Fallback to sessionStorage
+          const username = sessionStorage.getItem('username') || 'User';
+          console.log('API failed, using fallback username:', username);
+          updateProfileDisplay(username);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        // Fallback to sessionStorage
+        const username = sessionStorage.getItem('username') || 'User';
+        console.log('Error occurred, using fallback username:', username);
+        updateProfileDisplay(username);
+      }
+    }
+    
+    function updateProfileDisplay(username) {
+      console.log('Updating profile display with username:', username);
+      const profileBtn = document.getElementById('profile-btn');
+      const profileUsername = document.getElementById('profile-username');
+      
+      if (profileBtn) {
+        const initial = username && username !== 'User' ? username.charAt(0).toUpperCase() : 'U';
+        profileBtn.textContent = initial;
+        console.log('Updated profile button with:', initial);
+      } else {
+        console.error('Profile button not found!');
+      }
+      
+      if (profileUsername) {
+        profileUsername.textContent = username;
+        console.log('Updated profile username with:', username);
+      } else {
+        console.error('Profile username element not found!');
+      }
+    }
+
+    function toggleProfileMenu() {
+      const menu = document.getElementById('profile-menu');
+      if (menu) {
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      }
+    }
+
+    function logout() {
+      const apiUrl = window.location.origin + '/api/logout';
+      fetch(apiUrl, {
+        method: 'POST',
+        credentials: 'include',
+        mode: 'cors'
+      }).then(() => {
+        sessionStorage.clear();
+        window.location.href = 'login.html';
+      });
+    }
+
+    // Close profile menu when clicking outside
+    document.addEventListener('click', function(e) {
+      const profileBtn = document.getElementById('profile-btn');
+      const profileMenu = document.getElementById('profile-menu');
+      if (profileBtn && profileMenu && !profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+        profileMenu.style.display = 'none';
+      }
+    });
+
+    async function analyzeImage() {
+      console.log('analyzeImage called');
+      const fileInput = document.getElementById('fileInput');
+      
+      if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+        alert('Please select an image first!');
+        return;
+      }
+      
+      // Check if logged in
+      const loggedIn = sessionStorage.getItem('loggedIn');
+      if (!loggedIn) {
+        alert('Please login first!');
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      const analyzeBtn = document.querySelector('.analyze-btn') || document.getElementById('analyzeBtn');
+      const cancelBtn = document.querySelector('.cancel-btn');
+      
+      if (!analyzeBtn) {
+        console.error('Analyze button not found');
+        alert('Analyze button not found. Please refresh the page.');
+        return;
+      }
+      
+      analyzeBtn.textContent = 'Analyzing...';
+      analyzeBtn.disabled = true;
+      if (cancelBtn) {
+        cancelBtn.disabled = true;
+      }
+      
+      try {
+        // Convert image to base64
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = async function(e) {
+          const base64Image = e.target.result;
+          
+          try {
+            console.log('Sending prediction request...');
+            // Use current origin to avoid cookie issues
+            const apiUrl = window.location.origin + '/api/predict';
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              credentials: 'include',
+              mode: 'cors',
+              body: JSON.stringify({ image: base64Image })
+            });
+            
+            console.log('Response status:', response.status);
+            const data = await response.json();
+            console.log('Response data:', data);
+            
+            if (data.success) {
+              // Store results in sessionStorage
+              sessionStorage.setItem('predictionResults', JSON.stringify(data));
+              // Redirect to output page
+              window.location.href = 'output.html';
+            } else {
+              alert('Analysis failed: ' + (data.message || 'Unknown error'));
+              analyzeBtn.textContent = 'Analyze Image';
+              analyzeBtn.disabled = false;
+              if (cancelBtn) {
+                cancelBtn.disabled = false;
+              }
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('Connection error. Please make sure the server is running. Error: ' + error.message);
+            analyzeBtn.textContent = 'Analyze Image';
+            analyzeBtn.disabled = false;
+            if (cancelBtn) {
+              cancelBtn.disabled = false;
+            }
+          }
+        };
+        
+        reader.onerror = function(error) {
+          console.error('FileReader error:', error);
+          alert('Error reading image file');
+          analyzeBtn.textContent = 'Analyze Image';
+          analyzeBtn.disabled = false;
+          if (cancelBtn) {
+            cancelBtn.disabled = false;
+          }
+        };
+        
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error processing image: ' + error.message);
+        analyzeBtn.textContent = 'Analyze Image';
+        analyzeBtn.disabled = false;
+        if (cancelBtn) {
+          cancelBtn.disabled = false;
+        }
+      }
+    }
+
+    // Drag and drop functionality
+    const uploadBox = document.querySelector('.upload-box');
+    
+    uploadBox.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadBox.style.background = '#e3f2fd';
+      uploadBox.style.borderColor = '#0d47a1';
+    });
+    
+    uploadBox.addEventListener('dragleave', () => {
+      uploadBox.style.background = '#f8fbff';
+      uploadBox.style.borderColor = '#1565c0';
+    });
+    
+    uploadBox.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadBox.style.background = '#f8fbff';
+      uploadBox.style.borderColor = '#1565c0';
+      
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        document.getElementById('fileInput').files = files;
+        previewImage();
+      }
+    });
+  </script>
+</body>
+</html>

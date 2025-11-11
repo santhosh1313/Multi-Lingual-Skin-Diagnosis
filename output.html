@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skin Diagnosis Result</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #ffffff);
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1565c0, #1e88e5);
+      color: white;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    header img {
+      position: absolute;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 100px;
+      width: auto;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .header-buttons {
+      position: absolute;
+      bottom: 20px;
+      right: 30px;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    /* How It Works button */
+    .how-btn {
+      text-decoration: none;
+      color: #1565c0;
+      background-color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .how-btn:hover {
+      background: #1565c0;
+      color: white;
+    }
+
+    /* Profile button */
+    .profile-btn {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #1565c0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      color: #1565c0;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .profile-btn:hover {
+      transform: translateY(-2px);
+      background: #1565c0;
+      color: white;
+    }
+
+    /* Profile dropdown */
+    .profile-menu {
+      display: none;
+      position: absolute;
+      top: 70px;
+      right: 30px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 1rem;
+      width: 220px;
+      text-align: left;
+      z-index: 100;
+    }
+
+    .profile-menu p {
+      margin: 0 0 0.8rem;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .logout-btn {
+      background: #1565c0;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      width: 100%;
+      text-align: center;
+    }
+
+    .logout-btn:hover {
+      background: #0d47a1;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .result-box {
+      background: #e3f2fd;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin: 1rem 0;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .result-box h2 {
+      color: #0d47a1;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-box p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .voice-output {
+      margin-top: 1rem;
+    }
+
+    .voice-btn {
+      background: #1565c0;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .voice-btn:hover {
+      background: #0d47a1;
+    }
+
+    .recommendations {
+      margin-top: 2rem;
+      text-align: left;
+    }
+
+    .recommendations h3 {
+      color: #1565c0;
+      margin-bottom: 0.8rem;
+    }
+
+    .recommendations ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .recommendations ul li {
+      background: #f1f8ff;
+      padding: 0.8rem;
+      margin-bottom: 0.5rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .btn-container {
+      margin-top: 2rem;
+    }
+
+    .btn {
+      text-decoration: none;
+      background: #1565c0;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+      margin: 0 0.5rem;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      background: #0d47a1;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="logo.png" alt="Skin Diagnosis Logo">
+    <h1>Skin Diagnosis Result</h1>
+    <div class="header-buttons">
+      <select id="language-selector" class="language-selector" style="background-color: white; padding: 0.6rem 1rem; border-radius: 30px; font-size: 1rem; font-weight: 600; color: #1565c0; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer; transition: 0.3s ease;">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="te">తెలుగు</option>
+        <option value="ta">தமிழ்</option>
+        <option value="ml">മലയാളം</option>
+        <option value="kn">ಕನ್ನಡ</option>
+      </select>
+      <div class="profile-btn" id="profile-btn">U</div>
+      <div class="profile-menu" id="profile-menu">
+        <p><strong data-translate="user">User</strong>: <span id="profile-username">User</span></p>
+        <button class="logout-btn" id="logout-btn" data-translate="logout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <h2 data-translate="your_diagnosis">Your Diagnosis</h2>
+
+    <!-- Condition Section -->
+    <div class="result-box" id="condition-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 data-translate="condition">Condition:</h2>
+        <button class="speak-btn" onclick="speakConditionSection()" style="background: #1565c0; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer;" data-translate="speak">🔊 Speak</button>
+      </div>
+      <div id="conditions-list"></div>
+    </div>
+
+    <!-- Consultation Message Section -->
+    <div class="result-box" style="background: #fff3cd; border-left: 4px solid #ffc107;" id="consultation-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="color: #856404;" data-translate="consultation_recommendation">Consultation Recommendation</h2>
+        <button class="speak-btn" onclick="speakConsultationSection()" style="background: #ffc107; color: #856404; padding: 0.5rem 1rem; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer;" data-translate="speak">🔊 Speak</button>
+      </div>
+      <p id="consultation-text" style="font-size: 1.1rem; line-height: 1.6; color: #856404;" data-translate="consultation_text">
+        You should consult a dermatologist for a detailed examination and professional explanation of your skin condition.
+      </p>
+    </div>
+
+    <!-- Confirmation Test Section -->
+    <div class="result-box" id="confirmation-tests-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 data-translate="confirmation_tests">Confirmation Tests</h2>
+        <button class="speak-btn" onclick="speakTestsSection()" style="background: #1565c0; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer;" data-translate="speak">🔊 Speak</button>
+      </div>
+      <div id="tests-list"></div>
+    </div>
+
+    <!-- Precautions Section -->
+    <div class="result-box" id="precautions-section" style="background: #e8f5e9; border-left: 4px solid #4caf50;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="color: #2e7d32;" data-translate="precautions">Precautions</h2>
+        <button class="speak-btn" onclick="speakPrecautionsSection()" style="background: #4caf50; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer;" data-translate="speak">🔊 Speak</button>
+      </div>
+      <div id="precautions-list"></div>
+    </div>
+
+    <div class="btn-container">
+      <a href="input.html" class="btn" data-translate="try_again">Try Again</a>
+    </div>
+  </div>
+
+  <script src="translation.js"></script>
+  <script>
+    // Check if user is logged in
+    window.addEventListener('DOMContentLoaded', function() {
+      checkLoginStatus();
+      loadPredictionResults();
+    });
+
+    async function checkLoginStatus() {
+      const loggedIn = sessionStorage.getItem('loggedIn');
+      if (!loggedIn) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      // Fetch user info from API to get username
+      try {
+        // Use current origin to avoid cookie issues
+        const apiUrl = window.location.origin + '/api/user';
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          credentials: 'include',
+          mode: 'cors'
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.username) {
+            sessionStorage.setItem('username', data.username);
+            updateProfileDisplay(data.username);
+          } else {
+            // Fallback to sessionStorage
+            const username = sessionStorage.getItem('username') || 'User';
+            updateProfileDisplay(username);
+          }
+        } else {
+          // Fallback to sessionStorage
+          const username = sessionStorage.getItem('username') || 'User';
+          updateProfileDisplay(username);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        // Fallback to sessionStorage
+        const username = sessionStorage.getItem('username') || 'User';
+        updateProfileDisplay(username);
+      }
+    }
+    
+    function updateProfileDisplay(username) {
+      const profileBtn = document.getElementById('profile-btn');
+      const profileUsername = document.getElementById('profile-username');
+      if (profileBtn) {
+        profileBtn.textContent = username.charAt(0).toUpperCase();
+      }
+      if (profileUsername) {
+        profileUsername.textContent = username;
+      }
+    }
+
+    // Profile menu toggle
+    const profileBtn = document.getElementById('profile-btn');
+    const profileMenu = document.getElementById('profile-menu');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    profileBtn.addEventListener('click', () => {
+      profileMenu.style.display = profileMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+      if(!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+        profileMenu.style.display = 'none';
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      const apiUrl = window.location.origin + '/api/logout';
+      fetch(apiUrl, {
+        method: 'POST',
+        credentials: 'include',
+        mode: 'cors'
+      }).then(() => {
+        sessionStorage.clear();
+        window.location.href = 'login.html';
+      });
+    });
+
+    // Load prediction results
+    function loadPredictionResults() {
+      const resultsJson = sessionStorage.getItem('predictionResults');
+      if (!resultsJson) {
+        // No results found, redirect to input page
+        window.location.href = 'input.html';
+        return;
+      }
+
+      try {
+        const results = JSON.parse(resultsJson);
+        
+        if (!results.success || !results.top_predictions || results.top_predictions.length === 0) {
+          alert('No prediction results found');
+          window.location.href = 'input.html';
+          return;
+        }
+
+        // Display conditions
+        displayConditions(results.top_predictions);
+        
+        // Display confirmation tests
+        displayConfirmationTests(results.top_predictions);
+        
+        // Display precautions
+        displayPrecautions(results.top_predictions);
+        
+        // Translate after displaying results
+        const lang = getCurrentLanguage();
+        if (lang !== 'en') {
+          translateDynamicContent(lang);
+        }
+        
+      } catch (error) {
+        console.error('Error loading results:', error);
+        alert('Error loading results');
+        window.location.href = 'input.html';
+      }
+    }
+
+    function displayConditions(predictions) {
+      const conditionsList = document.getElementById('conditions-list');
+      conditionsList.innerHTML = '';
+      
+      predictions.forEach((pred, index) => {
+        const conditionDiv = document.createElement('div');
+        conditionDiv.style.marginBottom = '1rem';
+        conditionDiv.style.padding = '1rem';
+        conditionDiv.style.background = '#f1f8ff';
+        conditionDiv.style.borderRadius = '8px';
+        conditionDiv.style.borderLeft = '4px solid #1565c0';
+        
+        const label = document.createElement('h3');
+        label.style.color = '#1565c0';
+        label.style.marginBottom = '0.5rem';
+        label.textContent = pred.label;
+        
+        const probability = document.createElement('p');
+        probability.style.fontSize = '1.1rem';
+        probability.style.color = '#333';
+        probability.textContent = `Probability: ${pred.probability}%`;
+        
+        conditionDiv.appendChild(label);
+        conditionDiv.appendChild(probability);
+        conditionsList.appendChild(conditionDiv);
+      });
+    }
+
+    function displayConfirmationTests(predictions) {
+      const testsList = document.getElementById('tests-list');
+      testsList.innerHTML = '';
+      
+      const lang = getCurrentLanguage();
+      
+      predictions.forEach((pred, index) => {
+        const testDiv = document.createElement('div');
+        testDiv.style.marginBottom = '1.5rem';
+        testDiv.style.padding = '1.5rem';
+        testDiv.style.background = '#f5f5f5';
+        testDiv.style.borderRadius = '8px';
+        testDiv.style.borderLeft = '4px solid #1565c0';
+        
+        const title = document.createElement('h3');
+        title.style.color = '#1565c0';
+        title.style.marginBottom = '0.8rem';
+        title.textContent = pred.label;
+        title.setAttribute('data-condition-code', pred.code); // Add this line
+        
+        const tests = document.createElement('p');
+        tests.style.fontWeight = 'bold';
+        tests.style.marginBottom = '0.5rem';
+        tests.style.color = '#333';
+        tests.textContent = translateText('tests', lang) + ': ' + pred.tests;
+        
+        const description = document.createElement('p');
+        description.style.color = '#666';
+        description.style.lineHeight = '1.6';
+        description.setAttribute('data-translate-key', 'test_description_' + pred.code);
+        // Use translation if available, otherwise use original
+        const translatedDesc = translateText('test_description_' + pred.code, lang);
+        description.textContent = translatedDesc || pred.test_description;
+        
+        testDiv.appendChild(title);
+        testDiv.appendChild(tests);
+        testDiv.appendChild(description);
+        testsList.appendChild(testDiv);
+      });
+    }
+
+    function displayPrecautions(predictions) {
+      const precautionsList = document.getElementById('precautions-list');
+      precautionsList.innerHTML = '';
+      
+      const lang = getCurrentLanguage();
+      
+      predictions.forEach((pred, index) => {
+        if (!pred.precautions || pred.precautions.length === 0) return;
+        
+        const precautionDiv = document.createElement('div');
+        precautionDiv.style.marginBottom = '1.5rem';
+        precautionDiv.style.padding = '1.5rem';
+        precautionDiv.style.background = '#f1f8e9';
+        precautionDiv.style.borderRadius = '8px';
+        precautionDiv.style.borderLeft = '4px solid #4caf50';
+        
+        const title = document.createElement('h3');
+        title.style.color = '#2e7d32';
+        title.style.marginBottom = '1rem';
+        title.textContent = pred.label;
+        title.setAttribute('data-condition-code', pred.code); // Add this line
+        
+        const ul = document.createElement('ul');
+        ul.style.listStyle = 'none';
+        ul.style.paddingLeft = '0';
+        
+        pred.precautions.forEach((precaution, idx) => {
+          const li = document.createElement('li');
+          li.style.marginBottom = '0.8rem';
+          li.style.paddingLeft = '1.5rem';
+          li.style.position = 'relative';
+          li.style.color = '#333';
+          li.style.lineHeight = '1.6';
+          
+          // Add bullet point
+          const bullet = document.createElement('span');
+          bullet.textContent = (idx + 1) + ') ';
+          bullet.style.position = 'absolute';
+          bullet.style.left = '0';
+          bullet.style.color = '#4caf50';
+          bullet.style.fontWeight = 'bold';
+          
+          // Use translation if available
+          const translateKey = 'precaution_' + pred.code + '_' + (idx + 1);
+          li.setAttribute('data-translate-key', translateKey); // Add this line
+          const translatedPrecaution = translateText(translateKey, lang);
+          li.textContent = translatedPrecaution || precaution;
+          li.insertBefore(bullet, li.firstChild);
+          
+          ul.appendChild(li);
+        });
+        
+        precautionDiv.appendChild(title);
+        precautionDiv.appendChild(ul);
+        precautionsList.appendChild(precautionDiv);
+      });
+    }
+    
+    // Speak functions for each section - make them globally accessible
+    window.speakConditionSection = async function() {
+      try {
+        console.log('speakConditionSection called');
+        const conditionsList = document.getElementById('conditions-list');
+        if (!conditionsList) {
+          console.error('conditions-list not found');
+          alert('No conditions to speak');
+          return;
+        }
+        
+        const lang = getCurrentLanguage();
+        console.log('Current language:', lang);
+        let text = translateText('condition', lang) + ': ';
+        
+        conditionsList.querySelectorAll('div').forEach(div => {
+          const label = div.querySelector('h3');
+          const prob = div.querySelector('p');
+          if (label && prob) {
+            text += label.textContent + ' - ' + prob.textContent + '. ';
+          }
+        });
+        
+        console.log('Text to speak:', text);
+        if (text.trim() === translateText('condition', lang) + ':') {
+          alert('No conditions available to speak');
+          return;
+        }
+        
+        await speakText(text, lang);
+      } catch (error) {
+        console.error('Error in speakConditionSection:', error);
+        alert('Error speaking condition section: ' + error.message);
+      }
+    };
+    
+    window.speakConsultationSection = async function() {
+      try {
+        console.log('speakConsultationSection called');
+        const consultationText = document.getElementById('consultation-text');
+        if (!consultationText) {
+          console.error('consultation-text not found');
+          alert('No consultation text to speak');
+          return;
+        }
+        
+        const lang = getCurrentLanguage();
+        console.log('Current language:', lang);
+        let text = translateText('consultation_recommendation', lang) + ': ';
+        text += consultationText.textContent;
+        
+        console.log('Text to speak:', text);
+        await speakText(text, lang);
+      } catch (error) {
+        console.error('Error in speakConsultationSection:', error);
+        alert('Error speaking consultation section: ' + error.message);
+      }
+    };
+    
+    window.speakTestsSection = async function() {
+      try {
+        console.log('speakTestsSection called');
+        const testsList = document.getElementById('tests-list');
+        if (!testsList) {
+          console.error('tests-list not found');
+          alert('No tests to speak');
+          return;
+        }
+        
+        const lang = getCurrentLanguage();
+        console.log('Current language:', lang);
+        let text = translateText('confirmation_tests', lang) + ': ';
+        
+        testsList.querySelectorAll('div').forEach(div => {
+          const title = div.querySelector('h3');
+          const tests = div.querySelector('p');
+          const desc = div.querySelectorAll('p')[1];
+          if (title) text += title.textContent + '. ';
+          if (tests) text += tests.textContent + '. ';
+          if (desc) text += desc.textContent + '. ';
+        });
+        
+        console.log('Text to speak:', text);
+        if (text.trim() === translateText('confirmation_tests', lang) + ':') {
+          alert('No tests available to speak');
+          return;
+        }
+        
+        await speakText(text, lang);
+      } catch (error) {
+        console.error('Error in speakTestsSection:', error);
+        alert('Error speaking tests section: ' + error.message);
+      }
+    };
+
+    window.speakPrecautionsSection = async function() {
+      try {
+        console.log('speakPrecautionsSection called');
+        const precautionsList = document.getElementById('precautions-list');
+        if (!precautionsList) {
+          console.error('precautions-list not found');
+          alert('No precautions to speak');
+          return;
+        }
+        
+        const lang = getCurrentLanguage();
+        console.log('Current language:', lang);
+        let text = translateText('precautions', lang) + ': ';
+        
+        precautionsList.querySelectorAll('div').forEach(div => {
+          const title = div.querySelector('h3');
+          if (title) text += title.textContent + '. ';
+          
+          const ul = div.querySelector('ul');
+          if (ul) {
+            ul.querySelectorAll('li').forEach(li => {
+              text += li.textContent + '. ';
+            });
+          }
+        });
+        
+        console.log('Text to speak:', text);
+        if (text.trim() === translateText('precautions', lang) + ':') {
+          alert('No precautions available to speak');
+          return;
+        }
+        
+        await speakText(text, lang);
+      } catch (error) {
+        console.error('Error in speakPrecautionsSection:', error);
+        alert('Error speaking precautions section: ' + error.message);
+      }
+    };
+    
+    // Translate dynamic content
+    async function translateDynamicContent(lang) {
+      if (lang === 'en') return;
+      
+      // Translate consultation text
+      const consultationText = document.getElementById('consultation-text');
+      if (consultationText) {
+        const originalText = consultationText.textContent;
+        const translated = await translateTextAPI(originalText, lang);
+        consultationText.textContent = translated;
+      }
+      
+      // Re-translate confirmation tests section
+      retranslateConfirmationTests(lang);
+      
+      // Re-translate precautions section
+      retranslatePrecautions(lang);
+    }
+
+    function retranslateConfirmationTests(lang) {
+      const testsList = document.getElementById('tests-list');
+      if (!testsList) return;
+      
+      testsList.querySelectorAll('div').forEach(testDiv => {
+        const title = testDiv.querySelector('h3');
+        const tests = testDiv.querySelector('p');
+        const description = testDiv.querySelectorAll('p')[1];
+        
+        // Get the condition code from the data attribute or translate the title
+        if (title) {
+          // Try to get condition code from data attribute
+          const conditionCode = title.getAttribute('data-condition-code');
+          if (conditionCode) {
+            // Translate condition label if we have a translation key
+            const labelKey = 'condition_' + conditionCode;
+            const translatedLabel = translateText(labelKey, lang);
+            if (translatedLabel !== labelKey) {
+              title.textContent = translatedLabel;
+            }
+          }
+        }
+        
+        // Translate "Tests:" label
+        if (tests) {
+          const testsText = tests.textContent;
+          const testsLabel = translateText('tests', lang);
+          // Extract the actual tests value (everything after "Tests: ")
+          const testsValue = testsText.includes(':') ? testsText.split(': ')[1] : testsText;
+          tests.textContent = testsLabel + ': ' + testsValue;
+        }
+        
+        // Translate description if it has a data-translate-key
+        if (description) {
+          const translateKey = description.getAttribute('data-translate-key');
+          if (translateKey) {
+            const translatedDesc = translateText(translateKey, lang);
+            if (translatedDesc !== translateKey) {
+              description.textContent = translatedDesc;
+            }
+          }
+        }
+      });
+    }
+
+    function retranslatePrecautions(lang) {
+      const precautionsList = document.getElementById('precautions-list');
+      if (!precautionsList) return;
+      
+      precautionsList.querySelectorAll('div').forEach(precautionDiv => {
+        const title = precautionDiv.querySelector('h3');
+        const ul = precautionDiv.querySelector('ul');
+        
+        // Translate condition label
+        if (title) {
+          const conditionCode = title.getAttribute('data-condition-code');
+          if (conditionCode) {
+            const labelKey = 'condition_' + conditionCode;
+            const translatedLabel = translateText(labelKey, lang);
+            if (translatedLabel !== labelKey) {
+              title.textContent = translatedLabel;
+            }
+          }
+        }
+        
+        // Translate each precaution item
+        if (ul) {
+          ul.querySelectorAll('li').forEach((li, idx) => {
+            const translateKey = li.getAttribute('data-translate-key');
+            if (translateKey) {
+              const translatedPrecaution = translateText(translateKey, lang);
+              if (translatedPrecaution !== translateKey) {
+                // Preserve the bullet point
+                const bullet = li.querySelector('span');
+                const bulletText = bullet ? bullet.textContent : (idx + 1) + ') ';
+                li.textContent = '';
+                if (bullet) {
+                  li.appendChild(bullet);
+                } else {
+                  const newBullet = document.createElement('span');
+                  newBullet.textContent = bulletText;
+                  newBullet.style.position = 'absolute';
+                  newBullet.style.left = '0';
+                  newBullet.style.color = '#4caf50';
+                  newBullet.style.fontWeight = 'bold';
+                  li.appendChild(newBullet);
+                }
+                li.appendChild(document.createTextNode(translatedPrecaution));
+              }
+            }
+          });
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

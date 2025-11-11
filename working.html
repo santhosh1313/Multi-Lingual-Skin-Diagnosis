@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works - Skin Diagnosis</title>
+  <style>
+    /* Same styling as the intro page */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e3f2fd, #ffffff); 
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1565c0, #1e88e5);
+      color: white;
+      height: 220px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    header img {
+      position: absolute;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 175px;
+      width: auto;
+      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .header-buttons {
+      position: absolute;
+      bottom: 20px;
+      right: 30px;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .header-buttons a {
+      text-decoration: none;
+      color: #1565c0;
+      background-color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      font-size: 1rem;
+      transition: 0.3s ease;
+      font-weight: 700;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .header-buttons a:hover {
+      background: #0d47a1;
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    section {
+      max-width: 1000px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    section h2 {
+      color: #1565c0;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+
+    .steps {
+      margin-top: 1rem;
+      line-height: 2;
+    }
+
+    .step {
+      background: #e3f2fd;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .step:hover {
+      transform: translateY(-3px);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background: #0d47a1;
+      color: white;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Skin Diagnosis Logo">
+    <h1>Skin Diagnosis</h1>
+    <div class="header-buttons">
+      <a href="skin.html">Home</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>How Skin Diagnosis Works</h2>
+    <div class="steps">
+      <div class="step"><strong>Step 1:</strong> Capture a clear image of the affected skin area using your device camera.</div>
+      <div class="step"><strong>Step 2:</strong> Provide symptoms using voice input in your preferred language.</div>
+      <div class="step"><strong>Step 3:</strong> The AI model analyzes the image and symptom data to detect possible skin conditions.</div>
+      <div class="step"><strong>Step 4:</strong> Receive detailed results along with recommended actions and guidance.</div>
+      <div class="step"><strong>Step 5:</strong> Save or share the report securely, if needed, for further consultation.</div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Skin Diagnosis | Accessible Skin Health</p>
+  </footer>
+</body>
+</html>

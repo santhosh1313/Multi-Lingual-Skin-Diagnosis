@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | Skin Diagnosis</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #1565c0, #42a5f5);
+    }
+
+    .signup-container {
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .signup-container h1 {
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      color: #1565c0;
+    }
+
+    .signup-container p {
+      margin-bottom: 1.5rem;
+      color: #666;
+    }
+
+    .signup-container input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    .signup-container input:focus {
+      border-color: #1565c0;
+      box-shadow: 0 0 5px rgba(21, 101, 192, 0.4);
+    }
+
+    .signup-container button {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      background: #1565c0;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .signup-container button:hover {
+      background: #0d47a1;
+      transform: translateY(-2px);
+    }
+
+    .signup-container .extra-links {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .signup-container .extra-links a {
+      color: #1565c0;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .signup-container .extra-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h1>Skin Diagnosis</h1>
+    <p>Create your account</p>
+    <form id="signupForm">
+      <input type="email" id="email" placeholder="Email Address" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+      <button type="submit">Sign Up</button>
+    </form>
+    <div id="errorMessage" style="color: red; margin-top: 1rem; display: none;"></div>
+    <div id="successMessage" style="color: green; margin-top: 1rem; display: none;"></div>
+    <div class="extra-links">
+      <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorMsg = document.getElementById('errorMessage');
+      const successMsg = document.getElementById('successMessage');
+      
+      // Hide previous messages
+      errorMsg.style.display = 'none';
+      successMsg.style.display = 'none';
+      
+      if (password !== confirmPassword) {
+        errorMsg.textContent = 'Passwords do not match';
+        errorMsg.style.display = 'block';
+        return;
+      }
+      
+      try {
+        // Use current origin or default to localhost:5000
+        const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')) 
+          ? window.location.origin + '/api/signup'
+          : 'http://localhost:5000/api/signup';
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          mode: 'cors',
+          body: JSON.stringify({ email, password, confirm_password: confirmPassword })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          successMsg.textContent = 'Account created successfully! Redirecting to login...';
+          successMsg.style.display = 'block';
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 2000);
+        } else {
+          errorMsg.textContent = data.message || 'Signup failed';
+          errorMsg.style.display = 'block';
+        }
+      } catch (error) {
+        errorMsg.textContent = 'Connection error. Please make sure the server is running.';
+        errorMsg.style.display = 'block';
+        console.error('Error:', error);
+      }
+    });
+  </script>
+</body>
+</html>
